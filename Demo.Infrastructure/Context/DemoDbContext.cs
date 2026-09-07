@@ -27,15 +27,12 @@ public partial class DemoDbContext : DbContext
     {
         modelBuilder.Entity<AuthMaster>(entity =>
         {
-            entity.HasKey(e => e.UserId);
+            entity.HasKey(e => e.AuthId);
 
             entity.ToTable("AuthMaster");
 
-            entity.Property(e => e.UserId)
-                .HasDefaultValueSql("(newid())", "DF_AuthMaster_UserID")
-                .HasColumnName("UserID");
+            entity.Property(e => e.AuthId).HasDefaultValueSql("(newid())", "DF_AuthMaster_AuthId");
             entity.Property(e => e.Password).HasMaxLength(50);
-            entity.Property(e => e.UserName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<EmployeeMaster>(entity =>
@@ -44,10 +41,9 @@ public partial class DemoDbContext : DbContext
 
             entity.ToTable("EmployeeMaster");
 
-            entity.Property(e => e.EmpId)
-                .HasDefaultValueSql("(newid())", "DF_EmployeeMaster_EmpID")
-                .HasColumnName("EmpID");
+            entity.Property(e => e.EmpId).ValueGeneratedNever();
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.EmpName).HasMaxLength(50);
             entity.Property(e => e.EmpNo).ValueGeneratedOnAdd();
             entity.Property(e => e.IsActive).HasDefaultValue(true, "DF_EmployeeMaster_IsActive");

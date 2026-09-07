@@ -5,11 +5,9 @@ namespace Demo.Infrastructure.Entity;
 
 public partial class AuthMaster
 {
-    public Guid UserId { get; set; }
+    public Guid AuthId { get; set; }
 
     public long EmpNo { get; set; }
-
-    public string UserName { get; set; } = null!;
 
     public string Password { get; set; } = null!;
 

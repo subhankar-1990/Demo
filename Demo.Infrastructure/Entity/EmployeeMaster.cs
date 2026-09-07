@@ -11,7 +11,9 @@ public partial class EmployeeMaster
 
     public string EmpName { get; set; } = null!;
 
-    public string Mobile { get; set; } = null!;
+    public string? Mobile { get; set; }
+
+    public string? Email { get; set; }
 
     public DateTime CreateDate { get; set; }
 
