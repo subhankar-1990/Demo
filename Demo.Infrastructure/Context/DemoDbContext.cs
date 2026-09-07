@@ -41,7 +41,7 @@ public partial class DemoDbContext : DbContext
 
             entity.ToTable("EmployeeMaster");
 
-            entity.Property(e => e.EmpId).ValueGeneratedNever();
+            entity.Property(e => e.EmpId).HasDefaultValueSql("(newid())", "DF_EmployeeMaster_EmpId");
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.EmpName).HasMaxLength(50);
