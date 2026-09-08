@@ -1,23 +1,71 @@
+using Demo.Application;
+using Demo.Infrastructure;
+using Microsoft.AspNetCore.RateLimiting;
+
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAutoMapper(config => config.AddMaps(typeof(Program).Assembly));
+builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+builder.Services.AddMemoryCache();
 
-// Configure the HTTP request pipeline.
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+    policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+    options.AddPolicy("AllowSignalR",
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:8080")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+    });
+});
+
+// Output cache
+builder.Services.AddOutputCache(options =>
+{
+    options.AddPolicy("CachePolicy", policy =>
+    {
+        policy.Expire(TimeSpan.FromSeconds(10));
+    });
+});
+
+// Rate limiter
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddConcurrencyLimiter("ConcurrencyPolicy", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 5;
+        limiterOptions.QueueLimit = 2;
+    });
+});
+
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+
+var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseRateLimiter();
+app.UseOutputCache();
 
+app.MapControllers();
 app.Run();
