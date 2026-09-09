@@ -13,16 +13,18 @@ namespace Demo.API.Controllers.v1
     public class AuthenticationController(IMediator mediator) : ControllerBase
     {
         [HttpPost("signin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Signin([FromBody] SigninCommand request)
         {
-            var result = await mediator.Send(new SigninCommand { EmpNo = request.EmpNo, Password = request.Password });
-            if (string.IsNullOrEmpty(result))
+            var token = await mediator.Send(new SigninCommand { EmpNo = request.EmpNo, Password = request.Password });
+            if (string.IsNullOrEmpty(token))
             {
-                return NotFound("EmpNo or Password not match !!!!");
+                return NotFound(new { message = "EmpNo or Password not match !!!!" });
             }
             else
             {
-                return Ok(result);
+                return Ok(new { token });
             }
         }
     }
