@@ -1,4 +1,5 @@
 ﻿using Demo.Infrastructure.Context;
+using Demo.Infrastructure.Repositories.Authentication;
 using Demo.Infrastructure.Repositories.Employee;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ namespace Demo.Infrastructure
             services.AddDbContext<DemoDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IEmployeeRepositories, EmployeeRepositories>();
+            services.AddScoped<IAuthenticationRepositories, AuthenticationRepositories>();
 
             return services;
         }

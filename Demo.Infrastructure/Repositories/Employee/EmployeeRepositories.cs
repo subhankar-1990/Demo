@@ -1,4 +1,5 @@
-﻿using Demo.Infrastructure.Context;
+﻿using Demo.Domain.HelperClass;
+using Demo.Infrastructure.Context;
 using Demo.Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,17 +11,17 @@ namespace Demo.Infrastructure.Repositories.Employee
 
         Task<List<EmployeeMaster>> GetEmployeeListAsync(CancellationToken cancellationToken);
 
-        Task<EmployeeMaster> GetEmployeeByIDAsync(int id, CancellationToken cancellationToken);
+        Task<EmployeeMaster?> GetEmployeeByIDAsync(string empId, CancellationToken cancellationToken);
+
+        Task<EmployeeMaster?> GetEmployeeByEmpNoAsync(string empNo, CancellationToken cancellationToken);
 
         Task<bool> UpdateEmployeeAsync(EmployeeMaster employee, CancellationToken cancellationToken);
 
-        Task<bool> DeleteEmployeeAsync(int id, CancellationToken cancellationToken);
+        Task<bool> DeleteEmployeeAsync(string empId, CancellationToken cancellationToken);
     }
 
     public class EmployeeRepositories(DemoDbContext context) : IEmployeeRepositories
     {
-        private readonly DateTime indiaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("India Standard Time"));
-
         public async Task<bool> CreateEmployeeAsync(string name, string mobileNo, string emailId, CancellationToken cancellationToken)
         {
             await context.EmployeeMasters.AddAsync(new EmployeeMaster
@@ -28,10 +29,10 @@ namespace Demo.Infrastructure.Repositories.Employee
                 EmpName = name,
                 Mobile = mobileNo,
                 Email = emailId,
-                CreateDate = indiaTime,
+                CreateDate = Helper.GetIndianDateTime(),
                 IsActive = true
             });
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
             return true;
         }
 
@@ -40,11 +41,16 @@ namespace Demo.Infrastructure.Repositories.Employee
             return await context.EmployeeMasters.ToListAsync(cancellationToken);
         }
 
-        public async Task<EmployeeMaster> GetEmployeeByIDAsync(int id, CancellationToken cancellationToken)
+        public async Task<EmployeeMaster?> GetEmployeeByIDAsync(string empId, CancellationToken cancellationToken)
         {
-            var employee = await context.EmployeeMasters.FindAsync([id], cancellationToken);
+            var employee = await context.EmployeeMasters.FindAsync([empId], cancellationToken);
 
-            return employee ?? throw new KeyNotFoundException($"Employee with ID {id} was not found.");
+            return employee ?? throw new KeyNotFoundException($"Employee with ID {empId} was not found.");
+        }
+
+        public async Task<EmployeeMaster?> GetEmployeeByEmpNoAsync(string empNo, CancellationToken cancellationToken)
+        {
+            return await context.EmployeeMasters.FirstOrDefaultAsync(e => e.EmpNo.ToString() == empNo, cancellationToken);
         }
 
         public async Task<bool> UpdateEmployeeAsync(EmployeeMaster employee, CancellationToken cancellationToken)
@@ -54,9 +60,9 @@ namespace Demo.Infrastructure.Repositories.Employee
             return true;
         }
 
-        public async Task<bool> DeleteEmployeeAsync(int id, CancellationToken cancellationToken)
+        public async Task<bool> DeleteEmployeeAsync(string empId, CancellationToken cancellationToken)
         {
-            var employee = await context.EmployeeMasters.FindAsync([id], cancellationToken);
+            var employee = await context.EmployeeMasters.FindAsync([empId], cancellationToken);
             if (employee == null) return false;
 
             context.EmployeeMasters.Remove(employee);

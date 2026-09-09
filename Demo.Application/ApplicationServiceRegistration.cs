@@ -1,4 +1,6 @@
-﻿using Demo.Application.Services.Employee.Commands;
+﻿using Demo.Application.Services.Authentication.Commands;
+using Demo.Application.Services.Authentication.Validations;
+using Demo.Application.Services.Employee.Commands;
 using Demo.Application.Services.Employee.Validations;
 using FluentValidation;
 using MediatR;
@@ -17,6 +19,7 @@ namespace Demo.Application
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(Behaviors.ValidationBehavior<,>));
 
+            services.AddTransient<IValidator<SigninCommand>, SigninCommandValidator>();
             services.AddTransient<IValidator<CreateEmployeeCommand>, CreateEmployeeCommandValidator>();
 
             return services;
