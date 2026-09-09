@@ -7,5 +7,6 @@ namespace Demo.API.Controllers.v1
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+
     }
 }
