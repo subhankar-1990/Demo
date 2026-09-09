@@ -2,7 +2,7 @@
 using Demo.Infrastructure.Entity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Demo.Infrastructure.Repositories
+namespace Demo.Infrastructure.Repositories.Employee
 {
     public interface IEmployeeRepositories
     {

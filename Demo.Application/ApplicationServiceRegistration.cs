@@ -1,5 +1,5 @@
-﻿using Demo.Application.Services.Commands;
-using Demo.Application.Services.Validations;
+﻿using Demo.Application.Services.Employee.Commands;
+using Demo.Application.Services.Employee.Validations;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

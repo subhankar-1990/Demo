@@ -1,7 +1,7 @@
-﻿using Demo.Application.Services.Commands;
+﻿using Demo.Application.Services.Employee.Commands;
 using FluentValidation;
 
-namespace Demo.Application.Services.Validations
+namespace Demo.Application.Services.Employee.Validations
 {
     public class CreateEmployeeCommandValidator : AbstractValidator<CreateEmployeeCommand>
     {

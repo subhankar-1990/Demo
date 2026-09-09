@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Demo.Application.Services.Commands
+namespace Demo.Application.Services.Employee.Commands
 {
     public class CreateEmployeeCommand : IRequest<bool>
     {

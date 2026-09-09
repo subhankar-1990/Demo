@@ -15,7 +15,6 @@ builder.Services.AddAutoMapper(config => config.AddMaps(typeof(Program).Assembly
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 builder.Services.AddMemoryCache();
 
-// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -34,8 +33,6 @@ builder.Services.AddCors(options =>
                   .AllowCredentials();
     });
 });
-
-// Output cache
 builder.Services.AddOutputCache(options =>
 {
     options.AddPolicy("CachePolicy", policy =>
@@ -43,8 +40,6 @@ builder.Services.AddOutputCache(options =>
         policy.Expire(TimeSpan.FromSeconds(10));
     });
 });
-
-// Rate limiter
 builder.Services.AddRateLimiter(options =>
 {
     options.AddConcurrencyLimiter("ConcurrencyPolicy", limiterOptions =>

@@ -1,8 +1,8 @@
-﻿using Demo.Application.Services.Commands;
-using Demo.Infrastructure.Repositories;
+﻿using Demo.Application.Services.Employee.Commands;
+using Demo.Infrastructure.Repositories.Employee;
 using MediatR;
 
-namespace Demo.Application.Services.Handlers
+namespace Demo.Application.Services.Employee.Handlers
 {
     public class CreateEmployeeCommandHandler(IEmployeeRepositories repositories) : IRequestHandler<CreateEmployeeCommand, bool>
     {

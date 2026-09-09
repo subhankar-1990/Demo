@@ -1,5 +1,5 @@
 ﻿using Demo.Infrastructure.Context;
-using Demo.Infrastructure.Repositories;
+using Demo.Infrastructure.Repositories.Employee;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
