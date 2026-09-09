@@ -1,3 +1,4 @@
+using Demo.API.Middleware;
 using Demo.Application;
 using Demo.Infrastructure;
 using Microsoft.AspNetCore.RateLimiting;
@@ -5,6 +6,9 @@ using Microsoft.AspNetCore.RateLimiting;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(config => config.AddMaps(typeof(Program).Assembly));
@@ -58,14 +62,12 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
-
 app.UseCors("AllowAll");
-
 app.UseAuthorization();
-
 app.UseRateLimiter();
 app.UseOutputCache();
-
 app.MapControllers();
 app.Run();
